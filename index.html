@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>MOTO RUSH — Neon Racing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="app">
+
+        <section id="main-menu" class="screen active">
+            <div class="menu-bg">
+                <div class="neon-grid"></div>
+                <div class="stars-layer"></div>
+            </div>
+            <div class="menu-content">
+                <div class="logo-wrap">
+                    <h1 class="logo-title">MOTO<span>RUSH</span></h1>
+                    <p class="logo-sub">NEON RACING LEAGUE</p>
+                </div>
+                <nav class="menu-nav">
+                    <button class="btn-menu btn-start" id="btn-start">
+                        <span class="btn-icon">▶</span>
+                        <span>BAŞLAT</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                    <button class="btn-menu btn-market" id="btn-market-menu">
+                        <span class="btn-icon">🏪</span>
+                        <span>MARKET</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                    <button class="btn-menu btn-settings" id="btn-settings-menu">
+                        <span class="btn-icon">⚙</span>
+                        <span>AYARLAR</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                </nav>
+                <div class="menu-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">EN YÜKSEK SKOR</span>
+                        <span class="stat-value" id="menu-highscore">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">COIN</span>
+                        <span class="stat-value" id="menu-coins">0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="game-screen" class="screen">
+            <canvas id="game-canvas"></canvas>
+
+            <div id="hud">
+                <div class="hud-top">
+                    <div class="hud-left">
+                        <div class="level-badge">
+                            <span class="hud-label">SEVİYE</span>
+                            <span class="hud-value" id="hud-level">1</span>
+                        </div>
+                        <div class="score-wrap">
+                            <span class="hud-label">SKOR</span>
+                            <span class="hud-value" id="hud-score">0</span>
+                        </div>
+                    </div>
+                    <div class="hud-center">
+                        <button class="btn-pause" id="btn-pause">⏸</button>
+                    </div>
+                    <div class="hud-right">
+                        <div class="coin-wrap">
+                            <span class="coin-icon">◆</span>
+                            <span class="hud-value" id="hud-coins">0</span>
+                        </div>
+                        <div class="fps-display">
+                            <span class="hud-label">FPS</span>
+                            <span class="hud-value" id="hud-fps">60</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hud-speedo-row">
+                    <div class="speedometer">
+                        <canvas id="speedo-canvas" width="120" height="68"></canvas>
+                        <div class="speed-value">
+                            <span id="speed-num">0</span>
+                            <span class="speed-unit">km/h</span>
+                        </div>
+                    </div>
+                    <div class="nitro-bar-wrap">
+                        <span class="nitro-label">NITRO</span>
+                        <div class="nitro-bar">
+                            <div class="nitro-fill" id="nitro-fill"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="mobile-controls" class="mobile-controls">
+                <div class="ctrl-side ctrl-side--left">
+                    <button class="ctrl-btn ctrl-btn--left" id="ctrl-left">
+                        <span class="ctrl-icon">◀</span>
+                        <span class="ctrl-label">SOL</span>
+                    </button>
+                    <button class="ctrl-btn ctrl-btn--right" id="ctrl-right">
+                        <span class="ctrl-icon">▶</span>
+                        <span class="ctrl-label">SAĞ</span>
+                    </button>
+                </div>
+
+                <div class="ctrl-side ctrl-side--center">
+                    <button class="ctrl-btn ctrl-btn--nitro" id="ctrl-nitro">
+                        <span class="ctrl-icon ctrl-nitro-icon">⚡</span>
+                        <span class="ctrl-label">NITRO</span>
+                    </button>
+                </div>
+
+                <div class="ctrl-side ctrl-side--right">
+                    <button class="ctrl-btn ctrl-btn--up" id="ctrl-up">
+                        <span class="ctrl-icon">▲</span>
+                        <span class="ctrl-label">GAZ</span>
+                    </button>
+                    <button class="ctrl-btn ctrl-btn--down" id="ctrl-down">
+                        <span class="ctrl-icon">▼</span>
+                        <span class="ctrl-label">FREN</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="level-announce" class="level-announce hidden">
+                <div class="announce-inner">
+                    <span class="announce-label">SEVİYE</span>
+                    <span class="announce-num" id="announce-num">1</span>
+                </div>
+            </div>
+        </section>
+
+        <div id="pause-overlay" class="overlay hidden">
+            <div class="overlay-panel">
+                <h2 class="overlay-title">DURAKLATILDI</h2>
+                <button class="btn-overlay" id="btn-resume">DEVAM ET</button>
+                <button class="btn-overlay" id="btn-restart-pause">YENİDEN BAŞLA</button>
+                <button class="btn-overlay" id="btn-menu-pause">ANA MENÜ</button>
+            </div>
+        </div>
+
+        <div id="gameover-overlay" class="overlay hidden">
+            <div class="overlay-panel gameover-panel">
+                <h2 class="overlay-title gameover-title">KAZA!</h2>
+                <div class="go-stats">
+                    <div class="go-stat">
+                        <span class="go-label">SKOR</span>
+                        <span class="go-value" id="go-score">0</span>
+                    </div>
+                    <div class="go-stat">
+                        <span class="go-label">EN YÜKSEK</span>
+                        <span class="go-value" id="go-highscore">0</span>
+                    </div>
+                    <div class="go-stat">
+                        <span class="go-label">KAZANILAN COIN</span>
+                        <span class="go-value" id="go-coins">0</span>
+                    </div>
+                    <div class="go-stat">
+                        <span class="go-label">SEVİYE</span>
+                        <span class="go-value" id="go-level">1</span>
+                    </div>
+                </div>
+                <button class="btn-overlay btn-retry" id="btn-retry">YENİDEN DENE</button>
+                <button class="btn-overlay" id="btn-market-go">MARKETE GİT</button>
+                <button class="btn-overlay" id="btn-menu-go">ANA MENÜ</button>
+            </div>
+        </div>
+
+        <section id="market-screen" class="screen">
+            <div class="market-bg"></div>
+            <div class="market-content">
+                <div class="market-header">
+                    <button class="btn-back" id="btn-back-market">← GERİ</button>
+                    <h2 class="market-title">MARKET</h2>
+                    <div class="market-coins">
+                        <span class="coin-icon">◆</span>
+                        <span id="market-coin-count">0</span>
+                    </div>
+                </div>
+                <div class="market-tabs">
+                    <button class="tab-btn active" data-tab="upgrades">GELİŞTİRMELER</button>
+                    <button class="tab-btn" data-tab="bikes">MOTORLAR</button>
+                </div>
+                <div class="market-body">
+                    <div class="tab-content active" id="tab-upgrades">
+                        <div class="upgrades-grid" id="upgrades-grid"></div>
+                    </div>
+                    <div class="tab-content" id="tab-bikes">
+                        <div class="bikes-grid" id="bikes-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="settings-screen" class="screen">
+            <div class="market-bg"></div>
+            <div class="settings-content">
+                <div class="market-header">
+                    <button class="btn-back" id="btn-back-settings">← GERİ</button>
+                    <h2 class="market-title">AYARLAR</h2>
+                    <div></div>
+                </div>
+                <div class="settings-body">
+                    <div class="setting-row">
+                        <span class="setting-label">ARKA PLAN MÜZİĞİ</span>
+                        <button class="toggle-btn" id="toggle-music">AÇIK</button>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">SES EFEKTLERİ</span>
+                        <button class="toggle-btn" id="toggle-sfx">AÇIK</button>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">GRAFİK KALİTESİ</span>
+                        <button class="toggle-btn" id="toggle-quality">YÜKSEK</button>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">SKOR SIFIRLA</span>
+                        <button class="toggle-btn danger" id="btn-reset">SIFIRLA</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
